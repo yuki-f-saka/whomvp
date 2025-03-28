@@ -9,13 +9,36 @@ export async function POST(req: Request) {
   }
 
   // メンバーを一括挿入
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("members")
-    .insert(members.map((name) => ({ group_id: groupId, name })));
+    .insert(members.map((name) => ({ group_id: groupId, name })))
+    .select('id');  // 挿入したメンバーのIDを取得
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true });
+  const memberIds = data?.map(member => member.id) || [];
+
+  return NextResponse.json({ success: true, memberIds });
+}
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const groupId = searchParams.get('groupId');
+
+  if (!groupId) {
+    return NextResponse.json({ error: "グループIDが必要です" }, { status: 400 });
+  }
+
+  const { data: members, error } = await supabase
+    .from("members")
+    .select("id, name")
+    .eq("group_id", groupId);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ members });
 }
