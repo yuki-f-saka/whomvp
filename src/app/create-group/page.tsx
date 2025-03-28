@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from '../styles/create-group.module.css';
+import common from '../styles/common.module.css';
 
 export default function CreateGroupPage() {
   const [groupName, setGroupName] = useState("");
@@ -28,26 +30,25 @@ export default function CreateGroupPage() {
       return;
     }
 
-    // グループ作成後、メンバー作成ページへ遷移
-    router.push(`/create-group/${data.id}/members`);
+    router.push(`/create-group/${data.groupId}/members`);
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">グループ作成</h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
+    <main className={common.container}>
+      <div className={common.card}>
+        <h1 className={common.title}>グループ作成</h1>
+        <div className={common.cardContent}>
           <input
             type="text"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
             placeholder="グループ名"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+            className={styles.inputField}
           />
           <button
             onClick={handleCreateGroup}
             disabled={loading}
-            className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
+            className={`${common.button} ${loading ? common.buttonPrimaryDisabled : common.buttonPrimary}`}
           >
             {loading ? "作成中..." : "作成"}
           </button>

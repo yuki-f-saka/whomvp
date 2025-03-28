@@ -17,6 +17,8 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import styles from '../../styles/vote.module.css';
+import common from '../../styles/common.module.css';
 
 const SortableItem = ({ id, name, index }: { id: number; name: string; index: number }) => {
   const {
@@ -38,15 +40,15 @@ const SortableItem = ({ id, name, index }: { id: number; name: string; index: nu
       style={style}
       {...attributes}
       {...listeners}
-      className="flex items-center p-4 mb-2 bg-white rounded-lg shadow cursor-move hover:bg-gray-50"
+      className={styles.sortableItem}
     >
-      <div className="w-12 h-12 flex items-center justify-center bg-blue-100 rounded-full mr-4">
-        <span className="text-xl font-bold text-blue-600">{index + 1}</span>
+      <div className={styles.rankNumber}>
+        <span className={styles.rankNumberText}>{index + 1}</span>
       </div>
       <div className="flex-1">
-        <span className="text-gray-700">{name}</span>
+        <span className={styles.memberName}>{name}</span>
       </div>
-      <div className="text-gray-400">
+      <div className={styles.dragHandle}>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -149,13 +151,13 @@ export default function VotePage({ params }: { params: { groupId: Promise<string
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md">
-        <div className="text-sm text-gray-600 mb-2">投票者: {voterName}さん</div>
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">投票</h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-gray-600 mb-4">メンバーをドラッグ&ドロップして順位を決定してください</p>
-          <div className="space-y-2 mb-6">
+    <main className={common.container}>
+      <div className={common.card}>
+        <div className={styles.voterName}>投票者: {voterName}さん</div>
+        <h1 className={common.title}>投票</h1>
+        <div className={common.cardContent}>
+          <p className={`${common.text} mb-4`}>メンバーをドラッグ&ドロップして順位を決定してください</p>
+          <div className={styles.itemList}>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -175,7 +177,7 @@ export default function VotePage({ params }: { params: { groupId: Promise<string
           <button 
             onClick={submitVote} 
             disabled={loading}
-            className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400"
+            className={`${common.button} ${loading ? common.buttonPrimaryDisabled : common.buttonPrimary}`}
           >
             {loading ? "投票中..." : "投票する"}
           </button>

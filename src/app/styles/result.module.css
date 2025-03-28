@@ -1,0 +1,47 @@
+.resultList {
+  @apply space-y-4;
+}
+
+.resultItem {
+  @apply flex items-center justify-between p-4 rounded-lg;
+}
+
+.resultItemFirst {
+  @apply bg-yellow-50;
+}
+
+.resultItemSecond {
+  @apply bg-gray-50;
+}
+
+.resultItemThird {
+  @apply bg-orange-50;
+}
+
+.resultItemOther {
+  @apply bg-white border border-gray-100;
+}
+
+.memberInfo {
+  @apply flex items-center gap-2;
+}
+
+.rank {
+  @apply text-xl;
+}
+
+.memberName {
+  @apply font-medium text-gray-800;
+}
+
+.pointsContainer {
+  @apply text-right;
+}
+
+.points {
+  @apply text-sm text-gray-600;
+}
+
+.averagePoints {
+  @apply text-sm text-gray-500;
+}

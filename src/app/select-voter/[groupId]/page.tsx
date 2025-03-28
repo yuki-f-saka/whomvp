@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import styles from '../../styles/select-voter.module.css';
+import common from '../../styles/common.module.css';
 
 export default function SelectVoterPage({ params }: { params: { groupId: Promise<string> } }) {
   const [members, setMembers] = useState<{ id: string; name: string }[]>([]);
@@ -57,49 +59,48 @@ export default function SelectVoterPage({ params }: { params: { groupId: Promise
 
   if (loading) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div className="text-xl text-gray-600">読み込み中...</div>
+      <main className={common.container}>
+        <div className={`${common.text} text-xl`}>読み込み中...</div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <main className={common.container}>
         <div className="text-xl text-red-600">エラー: {error}</div>
       </main>
     );
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">投票者の選択</h1>
+    <main className={common.container}>
+      <div className={common.card}>
+        <h1 className={common.title}>投票者の選択</h1>
         
-        {/* 共有URL */}
-        <div className="bg-blue-50 rounded-lg p-4 mb-6">
-          <p className="text-sm text-blue-600 mb-2">このページを他のメンバーと共有してください：</p>
+        <div className={styles.shareUrlContainer}>
+          <p className={styles.shareUrlText}>このページを他のメンバーと共有してください：</p>
           <button
             onClick={copyShareUrl}
-            className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition flex items-center justify-between"
+            className={styles.shareUrlButton}
           >
-            <span className="text-gray-600 truncate">
+            <span className={styles.copyText}>
               {typeof window !== 'undefined' ? `${window.location.origin}/select-voter/${groupId}` : ''}
             </span>
-            <span className="text-blue-600 ml-2">
+            <span className={styles.copyStatus}>
               {copied ? '✓ コピーしました' : 'URLをコピー'}
             </span>
           </button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-gray-600 mb-4">投票を行うメンバーを選択してください</p>
-          <ul className="space-y-2">
+        <div className={common.cardContent}>
+          <p className={`${common.text} mb-4`}>投票を行うメンバーを選択してください</p>
+          <ul className={styles.voterList}>
             {members.map((member) => (
               <li key={member.id}>
                 <button
                   onClick={() => selectVoter(member.id)}
-                  className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition"
+                  className={styles.voterButton}
                 >
                   {member.name}
                 </button>

@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import styles from '../../styles/result.module.css';
+import common from '../../styles/common.module.css';
 
 interface Result {
   name: string;
@@ -48,15 +50,15 @@ export default function ResultPage({ params }: { params: { groupId: Promise<stri
 
   if (loading) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div className="text-xl text-gray-600">集計中...</div>
+      <main className={common.container}>
+        <div className={`${common.text} text-xl`}>集計中...</div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <main className={common.container}>
         <div className="text-xl text-red-600">エラー: {error}</div>
       </main>
     );
@@ -64,11 +66,11 @@ export default function ResultPage({ params }: { params: { groupId: Promise<stri
 
   if (results.length === 0) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div className="w-full max-w-md">
-          <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">投票結果</h1>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <p className="text-gray-600 text-center">まだ投票が行われていません</p>
+      <main className={common.container}>
+        <div className={common.card}>
+          <h1 className={common.title}>投票結果</h1>
+          <div className={common.cardContent}>
+            <p className={`${common.text} text-center`}>まだ投票が行われていません</p>
           </div>
         </div>
       </main>
@@ -76,33 +78,33 @@ export default function ResultPage({ params }: { params: { groupId: Promise<stri
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">投票結果</h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <ul className="space-y-4">
+    <main className={common.container}>
+      <div className={common.card}>
+        <h1 className={common.title}>投票結果</h1>
+        <div className={common.cardContent}>
+          <ul className={styles.resultList}>
             {results.map((member, index) => (
               <li 
                 key={index}
-                className={`flex items-center justify-between p-4 rounded-lg ${
-                  index === 0 ? 'bg-yellow-50' :
-                  index === 1 ? 'bg-gray-50' :
-                  index === 2 ? 'bg-orange-50' :
-                  'bg-white border border-gray-100'
+                className={`${styles.resultItem} ${
+                  index === 0 ? styles.resultItemFirst :
+                  index === 1 ? styles.resultItemSecond :
+                  index === 2 ? styles.resultItemThird :
+                  styles.resultItemOther
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">
+                <div className={styles.memberInfo}>
+                  <span className={styles.rank}>
                     {index === 0 ? '🥇' :
                      index === 1 ? '🥈' :
                      index === 2 ? '🥉' :
                      `${index + 1}位`}
                   </span>
-                  <span className="font-medium text-gray-800">{member.name}</span>
+                  <span className={styles.memberName}>{member.name}</span>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm text-gray-600">獲得ポイント: {member.points}</div>
-                  <div className="text-sm text-gray-500">平均獲得ポイント: {member.averagePoints}</div>
+                <div className={styles.pointsContainer}>
+                  <div className={styles.points}>獲得ポイント: {member.points}</div>
+                  <div className={styles.averagePoints}>平均獲得ポイント: {member.averagePoints}</div>
                 </div>
               </li>
             ))}

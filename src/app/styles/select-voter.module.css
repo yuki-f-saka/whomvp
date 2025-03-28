@@ -1,0 +1,27 @@
+.voterList {
+  @apply space-y-2;
+}
+
+.voterButton {
+  @apply w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition;
+}
+
+.shareUrlContainer {
+  @apply bg-blue-50 rounded-lg p-4 mb-6;
+}
+
+.shareUrlText {
+  @apply text-sm text-blue-600 mb-2;
+}
+
+.shareUrlButton {
+  @apply w-full px-4 py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition flex items-center justify-between;
+}
+
+.copyText {
+  @apply text-gray-600 truncate;
+}
+
+.copyStatus {
+  @apply text-blue-600 ml-2;
+}

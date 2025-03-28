@@ -1,0 +1,39 @@
+.inputContainer {
+  @apply flex gap-2 mb-4;
+}
+
+.inputField {
+  @apply flex-1;
+}
+
+.memberList {
+  @apply mb-4 space-y-2;
+}
+
+.memberItem {
+  @apply flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg group;
+}
+
+.deleteButton {
+  @apply opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500;
+}
+
+.shareUrlContainer {
+  @apply mt-6 p-4 bg-blue-50 rounded-lg;
+}
+
+.shareUrlText {
+  @apply text-sm text-blue-600 mb-2;
+}
+
+.shareUrlButton {
+  @apply w-full px-4 py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition flex items-center justify-between;
+}
+
+.copyText {
+  @apply text-gray-600 truncate;
+}
+
+.copyStatus {
+  @apply text-blue-600 ml-2;
+}

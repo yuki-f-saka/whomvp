@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import styles from '../../styles/vote-complete.module.css';
+import common from '../../styles/common.module.css';
 
 export default function VoteCompletePage({ params }: { params: { groupId: Promise<string> } }) {
   const router = useRouter();
@@ -21,14 +23,14 @@ export default function VoteCompletePage({ params }: { params: { groupId: Promis
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">投票完了</h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-gray-600 text-center mb-6">投票が完了しました。ご協力ありがとうございます。</p>
+    <main className={common.container}>
+      <div className={common.card}>
+        <h1 className={common.title}>投票完了</h1>
+        <div className={common.cardContent}>
+          <p className={styles.message}>投票が完了しました。ご協力ありがとうございます。</p>
           <button 
             onClick={viewResults}
-            className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className={`${common.button} ${common.buttonPrimary}`}
           >
             結果を見る
           </button>

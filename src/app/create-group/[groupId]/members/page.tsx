@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from '../../../styles/members.module.css';
+import common from '../../../styles/common.module.css';
 
 export default function MembersPage({ params }: { params: { groupId: string } }) {
   const [members, setMembers] = useState<string[]>([]);
@@ -53,34 +55,34 @@ export default function MembersPage({ params }: { params: { groupId: string } })
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">メンバー追加</h1>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex gap-2 mb-4">
+    <main className={common.container}>
+      <div className={common.card}>
+        <h1 className={common.title}>メンバー追加</h1>
+        <div className={common.cardContent}>
+          <div className={styles.inputContainer}>
             <input
               type="text"
               value={memberName}
               onChange={(e) => setMemberName(e.target.value)}
               placeholder="メンバー名"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${common.input} ${styles.inputField}`}
             />
             <button 
               onClick={addMember}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              className={`${common.button} ${common.buttonSecondary}`}
             >
               追加
             </button>
           </div>
 
           {members.length > 0 && (
-            <ul className="mb-4 space-y-2">
+            <ul className={styles.memberList}>
               {members.map((member, index) => (
-                <li key={index} className="flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg group">
+                <li key={index} className={styles.memberItem}>
                   <span>{member}</span>
                   <button
                     onClick={() => removeMember(index)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
+                    className={styles.deleteButton}
                     title="削除"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -95,22 +97,22 @@ export default function MembersPage({ params }: { params: { groupId: string } })
           <button 
             onClick={saveMembers} 
             disabled={loading || members.length === 0}
-            className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 mb-4"
+            className={`${common.button} ${loading ? common.buttonPrimaryDisabled : common.buttonPrimary} mb-4`}
           >
             {loading ? "保存中..." : "メンバー確定"}
           </button>
 
           {members.length > 0 && (
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-600 mb-2">このURLをメンバーに共有してください：</p>
+            <div className={styles.shareUrlContainer}>
+              <p className={styles.shareUrlText}>このURLをメンバーに共有してください：</p>
               <button
                 onClick={copyShareUrl}
-                className="w-full px-4 py-2 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition flex items-center justify-between"
+                className={styles.shareUrlButton}
               >
-                <span className="text-gray-600 truncate">
+                <span className={styles.copyText}>
                   {typeof window !== 'undefined' ? `${window.location.origin}/select-voter/${params.groupId}` : ''}
                 </span>
-                <span className="text-blue-600 ml-2">
+                <span className={styles.copyStatus}>
                   {copied ? '✓ コピーしました' : 'URLをコピー'}
                 </span>
               </button>
