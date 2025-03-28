@@ -15,5 +15,13 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json( data[0] );
+    // データが存在しない場合のエラーハンドリング
+    if (!data || data.length === 0) {
+        return NextResponse.json({ error: "グループの作成に失敗しました" }, { status: 500 });
+    }
+
+    return NextResponse.json({ 
+        groupId: data[0].id,
+        name: data[0].name 
+    });
 }

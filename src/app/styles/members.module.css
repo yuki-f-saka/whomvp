@@ -11,11 +11,16 @@
 }
 
 .memberItem {
-  @apply flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg group;
+  @apply flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg;
 }
 
 .deleteButton {
-  @apply opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500;
+  @apply transition-opacity text-gray-400 hover:text-red-500;
+  opacity: 0;
+}
+
+.memberItem:hover .deleteButton {
+  opacity: 1;
 }
 
 .shareUrlContainer {

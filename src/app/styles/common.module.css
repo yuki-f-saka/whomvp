@@ -1,86 +1,47 @@
 .container {
-  composes: container from global;
+  composes: fullWidthContainer from global;
 }
 
 .card {
-  width: 100%;
-  max-width: 28rem;
+  @apply w-full max-w-md;
 }
 
 .cardContent {
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  padding: 1.5rem;
+  @apply bg-white rounded-lg shadow-md p-6;
 }
 
 .title {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-  font-weight: 700;
-  color: #1f2937;
-  text-align: center;
-  margin-bottom: 1.5rem;
+  @apply text-3xl font-bold text-gray-800 text-center mb-6;
 }
 
 .button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  @apply px-6 py-3 rounded-lg transition-colors duration-200 ease-in-out;
 }
 
 .buttonFull {
-  width: 100%;
+  @apply w-full;
 }
 
 .buttonPrimary {
-  composes: button;
-  background-color: #2563eb;
-  color: #ffffff;
-}
-
-.buttonPrimary:hover {
-  background-color: #1d4ed8;
+  @apply bg-blue-600 text-white hover:bg-blue-700;
 }
 
 .buttonPrimaryDisabled {
-  composes: button buttonFull;
-  background-color: #9ca3af;
-  color: #ffffff;
-  cursor: not-allowed;
+  @apply bg-gray-400 text-white cursor-not-allowed w-full;
 }
 
 .buttonSecondary {
-  composes: button buttonFull;
-  background-color: #22c55e;
-  color: #ffffff;
-}
-
-.buttonSecondary:hover {
-  background-color: #16a34a;
+  @apply bg-green-600 text-white hover:bg-green-700 w-full;
 }
 
 .input {
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-}
-
-.input:focus {
-  outline: none;
-  --tw-ring-color: #3b82f6;
-  --tw-ring-width: 2px;
-  box-shadow: 0 0 0 var(--tw-ring-width) var(--tw-ring-color);
+  @apply px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
 }
 
 .text {
-  color: #4b5563;
+  @apply text-gray-600;
 }
 
 .textSmall {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: #4b5563;
+  @apply text-sm text-gray-600;
 }

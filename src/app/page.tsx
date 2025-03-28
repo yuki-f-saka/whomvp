@@ -6,10 +6,9 @@ export default function Home() {
     <main className={common.container}>
       <h1 className={common.title}>WhoMvp</h1>
       <p className={`${common.text} mt-2`}>順位投票ができるぞ</p>
-
       <Link
         href="/create-group"
-        className={`${common.buttonPrimary} mt-4`}
+        className={`${common.button} ${common.buttonPrimary} mt-4`}
       >
         新しいグループを作成
       </Link>

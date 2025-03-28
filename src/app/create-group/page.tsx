@@ -16,21 +16,29 @@ export default function CreateGroupPage() {
     }
 
     setLoading(true);
-    const res = await fetch("/api/groups", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: groupName }),
-    });
+    try {
+      const res = await fetch("/api/groups", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: groupName }),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const data = await res.json();
 
-    if (!res.ok) {
-      alert(data.error);
-      return;
+      if (!res.ok) {
+        throw new Error(data.error || "グループの作成に失敗しました");
+      }
+
+      if (!data.groupId) {
+        throw new Error("グループIDの取得に失敗しました");
+      }
+
+      router.push(`/create-group/${data.groupId}/members`);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "エラーが発生しました");
+    } finally {
+      setLoading(false);
     }
-
-    router.push(`/create-group/${data.groupId}/members`);
   };
 
   return (
