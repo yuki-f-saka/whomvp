@@ -27,11 +27,11 @@
 }
 
 .rank {
-  @apply text-xl;
+  @apply text-xl text-gray-900;
 }
 
 .memberName {
-  @apply font-medium text-gray-900 dark:text-gray-100;
+  @apply font-medium text-gray-900;
 }
 
 .pointsContainer {
