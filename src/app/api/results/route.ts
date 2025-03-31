@@ -21,12 +21,11 @@ export async function GET(req: Request) {
 
   // メンバーの投票結果を集計
   const voteCounts: Record<string, number> = {};
-  const totalVotes = votes.length; // 総投票数
+  const totalVotes = votes.length;
 
   votes.forEach((vote) => {
     const rankings = vote.ranked_members as { member_id: string; rank: number }[];
     rankings.forEach((ranking) => {
-      // 順位をそのままスコアとして加算（低いほど良い）
       voteCounts[ranking.member_id] = (voteCounts[ranking.member_id] || 0) + ranking.rank;
     });
   });
@@ -48,13 +47,14 @@ export async function GET(req: Request) {
   // 結果をメンバー名と共に返す
   const results = members
     .map((member) => ({
-      name: member.name,
+      memberId: member.id,
+      memberName: member.name,
       points: voteCounts[member.id] || 0,
       averagePoints: totalVotes > 0 
         ? Number((voteCounts[member.id] || 0) / totalVotes).toFixed(1)
         : "0.0"
     }))
-    .sort((a, b) => a.points - b.points); // スコアが低い順（=順位が高い順）にソート
+    .sort((a, b) => a.points - b.points);
 
   return NextResponse.json({ results, totalVotes });
 }
