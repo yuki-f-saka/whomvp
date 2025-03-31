@@ -4,8 +4,19 @@ import { useRouter } from "next/navigation";
 import styles from '../../styles/select-voter.module.css';
 import common from '../../styles/common.module.css';
 
-export default function SelectVoterPage({ params }: { params: { groupId: Promise<string> } }) {
-  const [members, setMembers] = useState<{ id: string; name: string }[]>([]);
+type PageProps = {
+  params: Promise<{
+    groupId: string;
+  }>;
+};
+
+type Member = {
+  id: string;
+  name: string;
+};
+
+export default function SelectVoterPage({ params }: PageProps) {
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
@@ -14,11 +25,11 @@ export default function SelectVoterPage({ params }: { params: { groupId: Promise
 
   useEffect(() => {
     const fetchGroupId = async () => {
-      const id = await params.groupId;
-      setGroupId(id);
+      const resolvedParams = await params;
+      setGroupId(resolvedParams.groupId);
     };
     fetchGroupId();
-  }, [params.groupId]);
+  }, [params]);
 
   useEffect(() => {
     if (!groupId) return;

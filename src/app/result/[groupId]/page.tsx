@@ -1,28 +1,34 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import styles from '../../styles/result.module.css';
 import common from '../../styles/common.module.css';
 
-interface Result {
-  name: string;
-  points: number;
-  averagePoints: string;
-}
+type PageProps = {
+  params: Promise<{
+    groupId: string;
+  }>;
+};
 
-export default function ResultPage({ params }: { params: { groupId: Promise<string> } }) {
+type Result = {
+  memberId: string;
+  memberName: string;
+  points: number;
+  averagePoints: number;
+};
+
+export default function ResultPage({ params }: PageProps) {
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
 
-  // groupIdを非同期で取得
   useEffect(() => {
     const fetchGroupId = async () => {
-      const id = await params.groupId;
-      setGroupId(id);
+      const resolvedParams = await params;
+      setGroupId(resolvedParams.groupId);
     };
     fetchGroupId();
-  }, [params.groupId]);
+  }, [params]);
 
   useEffect(() => {
     if (!groupId) return;
@@ -100,7 +106,7 @@ export default function ResultPage({ params }: { params: { groupId: Promise<stri
                      index === 2 ? '🥉' :
                      `${index + 1}位`}
                   </span>
-                  <span className={styles.memberName}>{member.name}</span>
+                  <span className={styles.memberName}>{member.memberName}</span>
                 </div>
                 <div className={styles.pointsContainer}>
                   <div className={styles.points}>獲得ポイント: {member.points}</div>

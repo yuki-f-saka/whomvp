@@ -1,22 +1,27 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import styles from '../../styles/vote-complete.module.css';
+import { useRouter } from "next/navigation";
 import common from '../../styles/common.module.css';
 
-export default function VoteCompletePage({ params }: { params: { groupId: Promise<string> } }) {
-  const router = useRouter();
+type PageProps = {
+  params: Promise<{
+    groupId: string;
+  }>;
+};
+
+export default function VoteCompletePage({ params }: PageProps) {
   const [groupId, setGroupId] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchGroupId = async () => {
-      const id = await params.groupId;
-      setGroupId(id);
+      const resolvedParams = await params;
+      setGroupId(resolvedParams.groupId);
     };
     fetchGroupId();
-  }, [params.groupId]);
+  }, [params]);
 
-  const viewResults = () => {
+  const goToResult = () => {
     if (groupId) {
       router.push(`/result/${groupId}`);
     }
@@ -27,12 +32,12 @@ export default function VoteCompletePage({ params }: { params: { groupId: Promis
       <div className={common.card}>
         <h1 className={common.title}>投票完了</h1>
         <div className={common.cardContent}>
-          <p className={styles.message}>投票が完了しました。ご協力ありがとうございます。</p>
-          <button 
-            onClick={viewResults}
+          <p className={`${common.text} mb-4`}>投票が完了しました！</p>
+          <button
+            onClick={goToResult}
             className={`${common.button} ${common.buttonPrimary}`}
           >
-            結果を見る
+            結果を確認する
           </button>
         </div>
       </div>

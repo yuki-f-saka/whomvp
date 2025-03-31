@@ -1,15 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from '../../../styles/members.module.css';
 import common from '../../../styles/common.module.css';
 
-export default function MembersPage({ params }: { params: { groupId: string } }) {
+type PageProps = {
+  params: Promise<{
+    groupId: string;
+  }>;
+};
+
+export default function MembersPage({ params }: PageProps) {
   const [members, setMembers] = useState<string[]>([]);
   const [memberName, setMemberName] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [groupId, setGroupId] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchGroupId = async () => {
+      const resolvedParams = await params;
+      setGroupId(resolvedParams.groupId);
+    };
+    fetchGroupId();
+  }, [params]);
 
   const addMember = () => {
     if (!memberName.trim()) return;
@@ -22,8 +37,8 @@ export default function MembersPage({ params }: { params: { groupId: string } })
   };
 
   const copyShareUrl = () => {
-    if (typeof window !== 'undefined') {
-      const url = `${window.location.origin}/select-voter/${params.groupId}`;
+    if (typeof window !== 'undefined' && groupId) {
+      const url = `${window.location.origin}/select-voter/${groupId}`;
       navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -31,6 +46,7 @@ export default function MembersPage({ params }: { params: { groupId: string } })
   };
 
   const saveMembers = async () => {
+    if (!groupId) return;
     if (members.length === 0) {
       alert("メンバーを追加してください");
       return;
@@ -40,7 +56,7 @@ export default function MembersPage({ params }: { params: { groupId: string } })
     const res = await fetch("/api/members", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ groupId: params.groupId, members }),
+      body: JSON.stringify({ groupId, members }),
     });
 
     const data = await res.json();
@@ -51,7 +67,7 @@ export default function MembersPage({ params }: { params: { groupId: string } })
       return;
     }
 
-    router.push(`/select-voter/${params.groupId}`);
+    router.push(`/select-voter/${groupId}`);
   };
 
   return (
@@ -110,7 +126,7 @@ export default function MembersPage({ params }: { params: { groupId: string } })
                 className={styles.shareUrlButton}
               >
                 <span className={styles.copyText}>
-                  {typeof window !== 'undefined' ? `${window.location.origin}/select-voter/${params.groupId}` : ''}
+                  {groupId ? `${typeof window !== 'undefined' ? window.location.origin : ''}/select-voter/${groupId}` : ''}
                 </span>
                 <span className={styles.copyStatus}>
                   {copied ? '✓ コピーしました' : 'URLをコピー'}

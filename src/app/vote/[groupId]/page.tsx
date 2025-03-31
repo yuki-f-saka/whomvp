@@ -21,6 +21,12 @@ import { CSS } from '@dnd-kit/utilities';
 import styles from '../../styles/vote.module.css';
 import common from '../../styles/common.module.css';
 
+type PageProps = {
+  params: Promise<{
+    groupId: string;
+  }>;
+};
+
 const SortableItem = ({ id, name, index }: { id: number; name: string; index: number }) => {
   const {
     attributes,
@@ -58,7 +64,7 @@ const SortableItem = ({ id, name, index }: { id: number; name: string; index: nu
   );
 };
 
-export default function VotePage({ params }: { params: { groupId: Promise<string> } }) {
+export default function VotePage({ params }: PageProps) {
   const [groupId, setGroupId] = useState<string | null>(null);
   const [members, setMembers] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -76,11 +82,11 @@ export default function VotePage({ params }: { params: { groupId: Promise<string
 
   useEffect(() => {
     const fetchGroupId = async () => {
-      const id = await params.groupId;
-      setGroupId(id);
+      const resolvedParams = await params;
+      setGroupId(resolvedParams.groupId);
     };
     fetchGroupId();
-  }, [params.groupId]);
+  }, [params]);
 
   useEffect(() => {
     if (!voterId || !groupId) {
