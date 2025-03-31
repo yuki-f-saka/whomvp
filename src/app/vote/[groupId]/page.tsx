@@ -6,6 +6,7 @@ import {
   closestCenter,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -74,6 +75,12 @@ export default function VotePage({ params }: PageProps) {
   const voterId = searchParams.get('voterId');
 
   const sensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
@@ -165,7 +172,12 @@ export default function VotePage({ params }: PageProps) {
         <div className={styles.voterName}>投票者: {voterName}さん</div>
         <h1 className={common.title}>投票</h1>
         <div className={common.cardContent}>
-          <p className={`${common.text} mb-4`}>メンバーをドラッグ&ドロップして順位を決定してください</p>
+          <p className={`${common.text} mb-4`}>
+            メンバーの順位を決定してください<br />
+            <span className={styles.dragInstructions}>
+              💡 スマートフォンの場合：メンバーを長押しして上下にスワイプ
+            </span>
+          </p>
           <div className={styles.itemList}>
             <DndContext
               sensors={sensors}
