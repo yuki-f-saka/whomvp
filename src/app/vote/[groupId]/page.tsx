@@ -8,6 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -104,8 +105,10 @@ export default function VotePage({ params }: { params: { groupId: Promise<string
     fetchData();
   }, [groupId, voterId]);
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    
+    if (!over) return;
     
     if (active.id !== over.id) {
       setMembers((items) => {
