@@ -1,13 +1,14 @@
 .container {
   composes: fullWidthContainer from global;
+  @apply w-full max-w-4xl mx-auto flex-1 flex flex-col;
 }
 
 .card {
-  @apply w-full max-w-md;
+  @apply w-full max-w-md mx-auto flex-1 flex flex-col;
 }
 
 .cardContent {
-  @apply bg-white rounded-lg shadow-md p-6;
+  @apply bg-white rounded-lg shadow-md p-6 flex-1 flex flex-col;
 }
 
 .title {
@@ -47,5 +48,5 @@
 }
 
 .logo {
-  @apply fixed top-4 left-4 z-50 transition-opacity hover:opacity-80;
+  @apply fixed top-8 left-8 z-50 transition-opacity hover:opacity-80;
 }

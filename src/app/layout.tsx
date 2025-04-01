@@ -26,10 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full w-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full w-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-gray-50`}
       >
-        {children}
-        <SpeedInsights />
+        <div className="flex-1 flex flex-col items-center ">
+          {children}
+          <SpeedInsights />
+        </div>
       </body>
     </html>
   );
