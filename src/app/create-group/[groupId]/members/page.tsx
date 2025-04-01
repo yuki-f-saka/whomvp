@@ -18,6 +18,7 @@ export default function MembersPage({ params }: PageProps) {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [groupId, setGroupId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,9 +30,32 @@ export default function MembersPage({ params }: PageProps) {
   }, [params]);
 
   const addMember = () => {
-    if (!memberName.trim()) return;
-    setMembers([...members, memberName]);
+    if (!memberName.trim()) {
+      setError("メンバー名を入力してください");
+      return;
+    }
+
+    // 大文字小文字を区別せずに重複チェック
+    const isDuplicate = members.some(
+      member => member.toLowerCase() === memberName.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      setError("同じ名前のメンバーが既に存在します");
+      return;
+    }
+
+    setMembers([...members, memberName.trim()]);
     setMemberName("");
+    setError(null);
+  };
+
+  // Enterキーでもメンバーを追加できるようにする
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addMember();
+    }
   };
 
   const removeMember = (index: number) => {
@@ -90,9 +114,13 @@ export default function MembersPage({ params }: PageProps) {
             <input
               type="text"
               value={memberName}
-              onChange={(e) => setMemberName(e.target.value)}
+              onChange={(e) => {
+                setMemberName(e.target.value);
+                setError(null);
+              }}
+              onKeyPress={handleKeyPress}
               placeholder="メンバー名"
-              className={`${common.input} ${styles.inputField}`}
+              className={`${common.input} ${styles.inputField} ${error ? 'border-red-500' : ''}`}
             />
             <button 
               onClick={addMember}
@@ -101,6 +129,10 @@ export default function MembersPage({ params }: PageProps) {
               追加
             </button>
           </div>
+
+          {error && (
+            <p className="text-red-500 text-sm mb-4">{error}</p>
+          )}
 
           {members.length > 0 && (
             <ul className={styles.memberList}>
