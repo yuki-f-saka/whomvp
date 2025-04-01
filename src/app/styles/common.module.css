@@ -45,3 +45,7 @@
 .textSmall {
   @apply text-sm text-gray-600;
 }
+
+.logo {
+  @apply fixed top-4 left-4 z-50 transition-opacity hover:opacity-80;
+}

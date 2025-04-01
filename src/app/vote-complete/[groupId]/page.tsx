@@ -1,6 +1,9 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import styles from '../../styles/vote.module.css';
 import common from '../../styles/common.module.css';
 
 type PageProps = {
@@ -29,6 +32,15 @@ export default function VoteCompletePage({ params }: PageProps) {
 
   return (
     <main className={common.container}>
+      <Link href="/" className={styles.logoLink}>
+        <Image
+          src="/whomvp-logo.svg"
+          alt="WhomVP Logo"
+          width={200}
+          height={60}
+          priority
+        />
+      </Link>
       <div className={common.card}>
         <h1 className={common.title}>投票完了</h1>
         <div className={common.cardContent}>

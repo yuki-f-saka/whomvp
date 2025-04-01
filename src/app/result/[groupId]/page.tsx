@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import styles from '../../styles/result.module.css';
 import common from '../../styles/common.module.css';
@@ -85,6 +87,15 @@ export default function ResultPage({ params }: PageProps) {
 
   return (
     <main className={common.container}>
+      <Link href="/" className={styles.logoLink}>
+        <Image
+          src="/whomvp-logo.svg"
+          alt="WhomVP Logo"
+          width={200}
+          height={60}
+          priority
+        />
+      </Link>
       <div className={common.card}>
         <h1 className={common.title}>投票結果</h1>
         <div className={common.cardContent}>

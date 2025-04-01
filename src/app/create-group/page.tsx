@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from '../styles/create-group.module.css';
@@ -43,6 +45,15 @@ export default function CreateGroupPage() {
 
   return (
     <main className={common.container}>
+      <Link href="/" className={styles.logoLink}>
+        <Image
+          src="/whomvp-logo.svg"
+          alt="WhomVP Logo"
+          width={200}
+          height={60}
+          priority
+        />
+      </Link>
       <div className={common.card}>
         <h1 className={common.title}>グループ作成</h1>
         <div className={common.cardContent}>

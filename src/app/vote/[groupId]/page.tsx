@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -168,6 +170,15 @@ export default function VotePage({ params }: PageProps) {
 
   return (
     <main className={common.container}>
+      <Link href="/" className={styles.logoLink}>
+        <Image
+          src="/whomvp-logo.svg"
+          alt="WhomVP Logo"
+          width={200}
+          height={60}
+          priority
+        />
+      </Link>
       <div className={common.card}>
         <div className={styles.voterName}>投票者: {voterName}さん</div>
         <h1 className={common.title}>投票</h1>
