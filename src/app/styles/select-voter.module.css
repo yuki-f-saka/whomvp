@@ -3,7 +3,15 @@
 }
 
 .voterButton {
-  @apply w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition text-gray-900;
+  @apply w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition text-gray-900 relative;
+}
+
+.voterButtonDisabled {
+  @apply bg-gray-100 cursor-not-allowed hover:bg-gray-100 text-gray-500;
+}
+
+.votedBadge {
+  @apply absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500 bg-gray-200 px-2 py-1 rounded;
 }
 
 .shareUrlContainer {

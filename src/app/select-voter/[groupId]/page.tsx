@@ -15,6 +15,7 @@ type PageProps = {
 type Member = {
   id: string;
   name: string;
+  hasVoted: boolean;
 };
 
 export default function SelectVoterPage({ params }: PageProps) {
@@ -122,9 +123,15 @@ export default function SelectVoterPage({ params }: PageProps) {
               <li key={member.id}>
                 <button
                   onClick={() => selectVoter(member.id)}
-                  className={styles.voterButton}
+                  className={`${styles.voterButton} ${
+                    member.hasVoted ? styles.voterButtonDisabled : ''
+                  }`}
+                  disabled={member.hasVoted}
                 >
                   {member.name}
+                  {member.hasVoted && (
+                    <span className={styles.votedBadge}>投票済み</span>
+                  )}
                 </button>
               </li>
             ))}

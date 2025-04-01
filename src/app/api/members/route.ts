@@ -31,14 +31,34 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "グループIDが必要です" }, { status: 400 });
   }
 
-  const { data: members, error } = await supabase
+  // メンバー情報を取得
+  const { data: members, error: membersError } = await supabase
     .from("members")
     .select("id, name")
     .eq("group_id", groupId);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (membersError) {
+    return NextResponse.json({ error: membersError.message }, { status: 500 });
   }
 
-  return NextResponse.json({ members });
+  // 投票済みメンバーを取得
+  const { data: votes, error: votesError } = await supabase
+    .from("votes")
+    .select("voter_id")
+    .eq("group_id", groupId);
+
+  if (votesError) {
+    return NextResponse.json({ error: votesError.message }, { status: 500 });
+  }
+
+  // 投票済みメンバーIDのセットを作成
+  const votedMemberIds = new Set(votes?.map(vote => vote.voter_id) || []);
+
+  // メンバー情報に投票済みフラグを追加
+  const membersWithVoteStatus = members?.map(member => ({
+    ...member,
+    hasVoted: votedMemberIds.has(member.id)
+  })) || [];
+
+  return NextResponse.json({ members: membersWithVoteStatus });
 }

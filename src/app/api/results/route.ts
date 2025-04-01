@@ -41,7 +41,12 @@ export async function GET(req: Request) {
   }
 
   if (!members || members.length === 0) {
-    return NextResponse.json({ results: [], totalVotes: 0 });
+    return NextResponse.json({ 
+      results: [], 
+      totalVotes: 0,
+      votedCount: 0,
+      totalMembers: 0 
+    });
   }
 
   // 結果をメンバー名と共に返す
@@ -56,5 +61,10 @@ export async function GET(req: Request) {
     }))
     .sort((a, b) => a.points - b.points);
 
-  return NextResponse.json({ results, totalVotes });
+  return NextResponse.json({ 
+    results, 
+    totalVotes,
+    votedCount: votes.length,
+    totalMembers: members.length 
+  });
 }

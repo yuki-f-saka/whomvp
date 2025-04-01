@@ -23,6 +23,8 @@ export default function ResultPage({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [groupId, setGroupId] = useState<string | null>(null);
+  const [votedCount, setVotedCount] = useState(0);
+  const [totalMembers, setTotalMembers] = useState(0);
 
   useEffect(() => {
     const fetchGroupId = async () => {
@@ -45,6 +47,8 @@ export default function ResultPage({ params }: PageProps) {
         }
         
         setResults(data.results);
+        setVotedCount(data.votedCount);
+        setTotalMembers(data.totalMembers);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : '予期せぬエラーが発生しました');
@@ -98,6 +102,11 @@ export default function ResultPage({ params }: PageProps) {
       </Link>
       <div className={common.card}>
         <h1 className={common.title}>投票結果</h1>
+        <p className={`${common.text} text-center mb-4`}>
+            {votedCount === totalMembers 
+              ? "全メンバー投票完了"
+              : `${votedCount}人投票完了`}
+          </p>
         <div className={common.cardContent}>
           <ul className={styles.resultList}>
             {results.map((member, index) => (
