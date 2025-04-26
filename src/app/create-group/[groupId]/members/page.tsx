@@ -138,7 +138,7 @@ export default function MembersPage({ params }: PageProps) {
             <ul className={styles.memberList}>
               {members.map((member, index) => (
                 <li key={index} className={styles.memberItem}>
-                  <span>{member}</span>
+                  <span className={styles.memberText}>{member}</span>
                   <button
                     onClick={() => removeMember(index)}
                     className={styles.deleteButton}
