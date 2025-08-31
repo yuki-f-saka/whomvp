@@ -31,34 +31,25 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "グループIDが必要です" }, { status: 400 });
   }
 
-  // メンバー情報を取得
-  const { data: members, error: membersError } = await supabase
-    .from("members")
-    .select("id, name")
+  // 新しく作成したビューからメンバー情報と投票ステータスを一度に取得
+  const { data, error } = await supabase
+    .from("members_with_vote_status")
+    .select("id, name, has_voted")
     .eq("group_id", groupId);
 
-  if (membersError) {
-    return NextResponse.json({ error: membersError.message }, { status: 500 });
+  if (error) {
+    // ビューが存在しない、または権限がない場合のエラーハンドリング
+    // SupabaseのRLS(Row Level Security)でビューへのアクセス許可が必要な場合があります
+    console.error("Error fetching from view:", error);
+    return NextResponse.json({ error: `データベースエラー: ${error.message}` }, { status: 500 });
   }
 
-  // 投票済みメンバーを取得
-  const { data: votes, error: votesError } = await supabase
-    .from("votes")
-    .select("voter_id")
-    .eq("group_id", groupId);
-
-  if (votesError) {
-    return NextResponse.json({ error: votesError.message }, { status: 500 });
-  }
-
-  // 投票済みメンバーIDのセットを作成
-  const votedMemberIds = new Set(votes?.map(vote => vote.voter_id) || []);
-
-  // メンバー情報に投票済みフラグを追加
-  const membersWithVoteStatus = members?.map(member => ({
-    ...member,
-    hasVoted: votedMemberIds.has(member.id)
+  // フロントエンドが期待するキャメルケース(hasVoted)に変換
+  const members = data?.map(member => ({
+    id: member.id,
+    name: member.name,
+    hasVoted: member.has_voted
   })) || [];
 
-  return NextResponse.json({ members: membersWithVoteStatus });
+  return NextResponse.json({ members });
 }
