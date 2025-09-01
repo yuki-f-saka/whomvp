@@ -2,6 +2,20 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
 
+// 返ってくるデータの型を定義する
+type VoteResult = {
+  memberId: string;
+  memberName: string;
+  points: number;
+};
+
+type RpcResponse = {
+  results: VoteResult[];
+  totalMembers: number;
+  votedCount: number;
+};
+
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const groupId = searchParams.get("groupId");
@@ -19,20 +33,27 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // RPCからの結果データ (data) には、results, totalMembers, votedCount が含まれる
+  if (!data) {
+    // データがnullの場合は、空の結果を返す
+    return NextResponse.json({ results: [], totalMembers: 0, votedCount: 0, totalVotes: 0 });
+  }
+
+  // dataを上で定義した型として扱う
+  const responseData = data as RpcResponse;
+
   // averagePointsを計算して結果に追加する
-  const resultsWithAverage = data.results.map((r: any) => ({
+  const resultsWithAverage = responseData.results.map((r) => ({
     ...r,
-    averagePoints: data.votedCount > 0 
-      ? (r.points / data.votedCount).toFixed(1) 
+    averagePoints: responseData.votedCount > 0 
+      ? (r.points / responseData.votedCount).toFixed(1) 
       : "0.0",
   }));
 
   const responsePayload = {
     results: resultsWithAverage,
-    totalVotes: data.votedCount, // totalVotesはvotedCountと同じ
-    votedCount: data.votedCount,
-    totalMembers: data.totalMembers,
+    totalVotes: responseData.votedCount, // totalVotesはvotedCountと同じ
+    votedCount: responseData.votedCount,
+    totalMembers: responseData.totalMembers,
   };
 
   return NextResponse.json(responsePayload);
