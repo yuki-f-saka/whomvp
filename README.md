@@ -100,3 +100,13 @@ Vercelダッシュボードで以下の手順で環境変数を設定できま�
 4. 変更を保存し、必要に応じて再デプロイ
 
 詳細は[Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying)を参照してください。
+
+## API仕様書の更新手順
+
+APIを新規で実装した時や更新した際には、以下の手順を実施してください：
+
+1. JDoc形式でコメントを記述する。
+2. `npx next-openapi-gen generate`を実行して`openapi.json`を再生成する。
+3. `npm run dev`でローカルサーバーを起動する。
+4. ブラウザで[http://localhost:3000/api-docs](http://localhost:3000/api-docs)にアクセスし、OpenAPI仕様書を確認する。
+5. `npm run mock`を実行してモックサーバーを立て、Postmanやcurlなどで動作確認を行う。
