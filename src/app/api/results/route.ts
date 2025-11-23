@@ -1,30 +1,39 @@
-// src/app/api/results/route.ts
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
+import { GetResultQuery } from "@/lib/schemas";
 
-// 返ってくるデータの型を定義する
-type VoteResult = {
+// RPCからの応答データの型（内部使用）
+type RpcResult = {
   memberId: string;
   memberName: string;
   points: number;
 };
 
 type RpcResponse = {
-  results: VoteResult[];
+  results: RpcResult[];
   totalMembers: number;
   votedCount: number;
 };
 
-
+/**
+ * Get vote results for a specific group
+ * @description 指定されたグループの投票結果を取得する
+ * @tag Results
+ * @query GetResultQuery
+ * @response 200:GetResultResponse
+ * @responseSet public
+ */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const groupId = searchParams.get("groupId");
+  const query = Object.fromEntries(searchParams.entries());
 
-  if (!groupId) {
-    return NextResponse.json({ error: "グループIDが必要です" }, { status: 400 });
+  const validation = GetResultQuery.safeParse(query); // スキーマ名を変更
+  if (!validation.success) {
+    return NextResponse.json({ error: validation.error.flatten() }, { status: 400 });
   }
 
-  // RPCを呼び出す
+  const { groupId } = validation.data;
+
   const { data, error } = await supabase.rpc("get_vote_results", {
     p_group_id: groupId,
   });
@@ -34,14 +43,11 @@ export async function GET(req: Request) {
   }
 
   if (!data) {
-    // データがnullの場合は、空の結果を返す
     return NextResponse.json({ results: [], totalMembers: 0, votedCount: 0, totalVotes: 0 });
   }
 
-  // dataを上で定義した型として扱う
   const responseData = data as RpcResponse;
 
-  // averagePointsを計算して結果に追加する
   const resultsWithAverage = responseData.results.map((r) => ({
     ...r,
     averagePoints: responseData.votedCount > 0 
@@ -51,7 +57,7 @@ export async function GET(req: Request) {
 
   const responsePayload = {
     results: resultsWithAverage,
-    totalVotes: responseData.votedCount, // totalVotesはvotedCountと同じ
+    totalVotes: responseData.votedCount,
     votedCount: responseData.votedCount,
     totalMembers: responseData.totalMembers,
   };

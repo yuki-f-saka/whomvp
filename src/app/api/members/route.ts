@@ -1,18 +1,29 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
+import { PostMemberBody, GetMemberQuery } from "@/lib/schemas";
 
+/**
+ * Add multiple members to a group
+ * @description グループに複数のメンバーを追加する
+ * @tag Members
+ * @body PostMemberBody
+ * @response 200:PostMemberResponse
+ * @responseSet public
+ */
 export async function POST(req: Request) {
-  const { groupId, members } = await req.json();
-
-  if (!groupId || !Array.isArray(members) || members.length === 0) {
-    return NextResponse.json({ error: "無効なデータ" }, { status: 400 });
+  const body = await req.json();
+  
+  const validation = PostMemberBody.safeParse(body);
+  if (!validation.success) {
+    return NextResponse.json({ error: validation.error.flatten() }, { status: 400 });
   }
+  
+  const { groupId, members } = validation.data;
 
-  // メンバーを一括挿入
   const { data, error } = await supabase
     .from("members")
     .insert(members.map((name) => ({ group_id: groupId, name })))
-    .select('id');  // 挿入したメンバーのIDを取得
+    .select('id');
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -23,28 +34,35 @@ export async function POST(req: Request) {
   return NextResponse.json({ success: true, memberIds });
 }
 
+/**
+ * Get a list of members for a group with their vote status
+ * @description グループのメンバー一覧（投票状況付き）を取得する
+ * @tag Members
+ * @query GetMemberQuery
+ * @response 200:GetMemberResponse
+ * @responseSet public
+ */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const groupId = searchParams.get('groupId');
+  const query = Object.fromEntries(searchParams.entries());
 
-  if (!groupId) {
-    return NextResponse.json({ error: "グループIDが必要です" }, { status: 400 });
+  const validation = GetMemberQuery.safeParse(query); // スキーマ名を変更
+  if (!validation.success) {
+    return NextResponse.json({ error: validation.error.flatten() }, { status: 400 });
   }
 
-  // 新しく作成したビューからメンバー情報と投票ステータスを一度に取得
+  const { groupId } = validation.data;
+
   const { data, error } = await supabase
     .from("members_with_vote_status")
     .select("id, name, has_voted")
     .eq("group_id", groupId);
 
   if (error) {
-    // ビューが存在しない、または権限がない場合のエラーハンドリング
-    // SupabaseのRLS(Row Level Security)でビューへのアクセス許可が必要な場合があります
     console.error("Error fetching from view:", error);
     return NextResponse.json({ error: `データベースエラー: ${error.message}` }, { status: 500 });
   }
 
-  // フロントエンドが期待するキャメルケース(hasVoted)に変換
   const members = data?.map(member => ({
     id: member.id,
     name: member.name,

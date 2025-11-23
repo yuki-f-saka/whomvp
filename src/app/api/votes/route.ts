@@ -1,14 +1,26 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
+import { PostVoteBody } from "@/lib/schemas";
+import { success } from "zod";
 
+/**
+ * Record a vote
+ * @description 投票を記録する
+ * @tag Votes
+ * @body PostVoteBody
+ * @response 200:PostVoteResponse
+ * @responseSet public
+ */
 export async function POST(req: Request) {
-  const { groupId, rankings, voterId } = await req.json();
-
-  if (!groupId || !voterId || !Array.isArray(rankings) || rankings.length === 0) {
-    return NextResponse.json({ error: "無効なデータ" }, { status: 400 });
+  const body = await req.json();
+  
+  const validation = PostVoteBody.safeParse(body);
+  if (!validation.success) {
+    return NextResponse.json({ error: validation.error.flatten() }, { status: 400 });
   }
+  
+  const { groupId, rankings, voterId } = validation.data;
 
-  // 投票データを保存
   const { error } = await supabase
     .from("votes")
     .insert({

@@ -1,0 +1,538 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "version": "1.0.0",
+    "description": "This is the OpenAPI specification for your project."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "PostGroupBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "PostGroupResponse": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "groupId",
+          "name"
+        ]
+      },
+      "PostMemberBody": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "groupId",
+          "members"
+        ]
+      },
+      "PostMemberResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "memberIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "memberIds"
+        ]
+      },
+      "GetMemberResponse": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "hasVoted": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "hasVoted"
+              ]
+            }
+          }
+        },
+        "required": [
+          "members"
+        ]
+      },
+      "GetResultResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "memberId": {
+                  "type": "string"
+                },
+                "memberName": {
+                  "type": "string"
+                },
+                "points": {
+                  "type": "number"
+                },
+                "averagePoints": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "memberId",
+                "memberName",
+                "points",
+                "averagePoints"
+              ]
+            }
+          },
+          "totalVotes": {
+            "type": "number"
+          },
+          "votedCount": {
+            "type": "number"
+          },
+          "totalMembers": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "results",
+          "totalVotes",
+          "votedCount",
+          "totalMembers"
+        ]
+      },
+      "PostVoteBody": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "voterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rankings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "memberId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "rank": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "memberId",
+                "rank"
+              ]
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "groupId",
+          "voterId",
+          "rankings"
+        ]
+      },
+      "PostVoteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "GetMemberQuery": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "groupId"
+        ]
+      },
+      "GetResultQuery": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "groupId"
+        ]
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Invalid request parameters"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "400"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Authentication required"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "401"
+                }
+              }
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Access denied"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "403"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Resource not found"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "404"
+                }
+              }
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Resource already exists"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "409"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                },
+                "code": {
+                  "type": "string",
+                  "example": "500"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/groups": {
+      "post": {
+        "operationId": "post-groups",
+        "summary": "Create a new group",
+        "description": "新しいグループを作成する",
+        "tags": [
+          "Groups"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostGroupBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostGroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/members": {
+      "post": {
+        "operationId": "post-members",
+        "summary": "Add multiple members to a group",
+        "description": "グループに複数のメンバーを追加する",
+        "tags": [
+          "Members"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostMemberBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostMemberResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "get": {
+        "operationId": "get-members",
+        "summary": "Get a list of members for a group with their vote status",
+        "description": "グループのメンバー一覧（投票状況付き）を取得する",
+        "tags": [
+          "Members"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMemberResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/results": {
+      "get": {
+        "operationId": "get-results",
+        "summary": "Get vote results for a specific group",
+        "description": "指定されたグループの投票結果を取得する",
+        "tags": [
+          "Results"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResultResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/votes": {
+      "post": {
+        "operationId": "post-votes",
+        "summary": "Record a vote",
+        "description": "投票を記録する",
+        "tags": [
+          "Votes"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostVoteBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostVoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  }
+}

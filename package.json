@@ -17,7 +17,10 @@
     "@vercel/speed-insights": "^1.2.0",
     "next": "15.2.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "swagger-ui": "^5.30.2",
+    "swagger-ui-react": "^5.30.2",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -27,6 +30,7 @@
     "autoprefixer": "^10.4.17",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
+    "next-openapi-gen": "^0.8.8",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
